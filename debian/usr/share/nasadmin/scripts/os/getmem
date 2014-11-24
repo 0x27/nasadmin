@@ -1,0 +1,4 @@
+#!/bin/bash
+#
+
+free|grep Mem:|awk 'OFMT="%.0f" {total=$2} ; {used=($3-($6+$7))} ; {percent=(used/total)*100} END {print percent}'

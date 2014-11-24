@@ -1,0 +1,9 @@
+Package: nasadmin 
+Version: debug 
+Section: base
+Priority: optional
+Architecture: x86_64 
+Depends: openssl-dev, hdparm, util-linux, php5-cgi, lsb-release, sysstat 
+Maintainer: Phill Gilbert <gil.philbert@gmail.com>
+Description: A NAS Administration web interface built on php and bootstrap 
+
