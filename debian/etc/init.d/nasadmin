@@ -12,7 +12,7 @@ source /etc/default/nasadmin
 NASD="/usr/bin/nasadmin"
 ROOT=/usr/share/nasadmin/web
 
-OPTIONS="-p $PORT -I $CGI -r $ROOT"
+OPTIONS="-p $PORT -I $CGI -r $ROOT -u www-data"
 
 # Check for daemon presence
 [ -x "$NASD" ] || exit 0

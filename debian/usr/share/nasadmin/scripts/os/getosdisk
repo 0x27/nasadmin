@@ -1,0 +1,4 @@
+#!/bin/bash
+
+OS_UID=`mount|grep " / "|awk '{print $1}'|awk -F"/" '{print $NF}'`
+/sbin/blkid|grep "$OS_UID"|awk -F: '{print $1}'|sed 's/[0-9]$//'|sed 's/p$//'

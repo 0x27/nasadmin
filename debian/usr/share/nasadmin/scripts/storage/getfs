@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PARTITIONS=`/sbin/blkid|grep -v swap|sed 's/\://g;s/UUID=//g;s/TYPE=//g;s/"//g'`
+
+IFS=$'\n'
+
+for PART in $PARTITIONS
+do
+  PARTDEV=`echo $PART|awk '{print $1}'`
+
+  PARTUID=`echo $PART|awk '{print $2}'`
+  PARTSPACE=`df|grep $PARTUID|awk '{print $5 " " $4 " " $6}'|sed 's/\%//g'`
+
+  PARTINFO=`sudo /bin/lsblk -blno SIZE,FSTYPE,UUID $PARTDEV`
+
+  FULLINFO=`echo $PARTDEV $PARTINFO $PARTSPACE|sed 's/ \+/ /g'`
+
+  echo $FULLINFO
+done

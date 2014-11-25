@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo /sbin/hdparm -I "$1"|egrep -i "Model|Serial|Firmware"|awk -F: '{print $2}'

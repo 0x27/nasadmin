@@ -1,1 +1,3 @@
-mpstat 1 1|egrep -iv "Average|CPU"|awk '{usage=(100-$11)} END {print usage}'|xargs
+#!/bin/bash 
+
+mpstat 1 1|egrep -iv "Average|CPU"|xargs|awk '{print (100-$11)}'

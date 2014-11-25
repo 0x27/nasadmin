@@ -1,1 +1,3 @@
-lsblk|grep disk|awk '{print $1 " " $4 }'
+#!/bin/bash
+
+sudo /sbin/fdisk -l|grep Disk|grep -v identifier|awk '{print $2 $5}'

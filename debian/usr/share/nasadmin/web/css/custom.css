@@ -1,3 +1,6 @@
 .borderless tbody tr td, .borderless thead tr th {
     border: none;
 }
+p.text-center.large {
+    font-size: 60px;
+}

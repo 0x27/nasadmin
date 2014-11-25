@@ -1,54 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<?php
 
-    <title>File Systems | NAS Admin</title>
+$page_id=5;
+include 'header.php';
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
-    <link href="css/plugins/timeline.css" rel="stylesheet">
-    <link href="css/sb-admin-2.css" rel="stylesheet">
-    <link href="css/custom.css" rel="stylesheet">
+$os_disk=trim(shell_exec('/usr/share/nasadmin/scripts/os/getosdisk'));
 
-    <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+function byte_power($bytes, $decimals = 2) {
+  $sz = 'BKMGTP';
+  $factor = floor((strlen($bytes) - 1) / 3);
+  return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor] . "B";
+}
 
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+exec('/usr/share/nasadmin/scripts/storage/getfs',$filesystems);
 
-</head>
+$count=0;
+foreach ($filesystems as $fsline) {
+  $fs = split(" ", $fsline);
+  $_dev=$fs[0];
+  $_size=$fs[1];
+  $_fs=$fs[2];
+  $_uuid=$fs[3];
+  $_used="";
+  $_mountpoint="[Not mounted]";
+  $_free="";
+  if (count($fs)>4) {
+    $_used=$fs[4];
+    $_free=$fs[5];
+    $_mountpoint=$fs[6];
+  }
 
-<body>
-    <div id="wrapper">
+  if ($count==0) echo '            <div class="row">'.chr(10);
+  echo '             <div class="col-md-6 col-sm-12">'.chr(10);
+  echo '              <div class="panel panel-';
+  if (strpos($_dev,$os_disk)===0) echo "primary"; else echo "default";
+  echo '">'.chr(10);
+  echo '               <div class="panel-heading">'.chr(10);
+  echo '                <i class="fa fa-folder-open fa-fw"></i> '.$_dev.chr(10);
+  echo '               </div>'.chr(10);
+  echo '               <div class="panel-body">'.chr(10);
+  echo '                <table class="table borderless table-condensed">'.chr(10);
+  echo '                 <tr><td><strong>Size</strong></td><td>'.byte_power($_size,0);
+    if ($_free!="") echo ' ('.byte_power($_free*1024,1).' free)';
+    echo '</td></tr>'.chr(10);
+  echo '                 <tr><td><strong>File System</strong><td>'.$_fs.'</td></tr>'.chr(10);
+  echo '                 <tr><td><strong>Mountpoint</strong><td>'.$_mountpoint.'</td></tr>'.chr(10);
+  echo '                </table>'.chr(10);
 
-<?php include 'menu.php'; ?>
+  echo '                <div class="progress">'.chr(10);
+  echo '                  <div class="progress-bar progress-bar-';
+  if (strpos($_dev,$os_disk)===0) echo "primary"; else echo "success";
+  echo '" role="progressbar" aria-valuenow="'.$_used.'" aria-valuemin="0" aria-valuemax="100" style="width: '.$_used.'%">'.chr(10);
+  echo '                   <span class="sr-only">'.$_used.'% used</span>'.chr(10);
+  echo '                  </div>'.chr(10);
+  echo '                 </div>'.chr(10);
 
-        <div id="page-wrapper">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header"><i class="fa fa-folder-open fa-fw"></i> File Systems</h1>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
+  echo '               </div>'.chr(10);
+  echo '              </div>'.chr(10);
+  echo '             </div>'.chr(10);
 
+  $count++;
+  if ($count==2) {
+    echo '            </div>'.chr(10);
+    $count=0;
+  }
+} 
 
-        </div>
-        <!-- /#page-wrapper -->
-
-    </div>
-    <!-- /#wrapper -->
-
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/plugins/metisMenu/metisMenu.min.js"></script>
-    <script src="js/sb-admin-2.js"></script>
-</body>
-
-</html>
+include 'footer.php';
+?>
