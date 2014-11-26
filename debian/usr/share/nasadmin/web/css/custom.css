@@ -4,3 +4,6 @@
 p.text-center.large {
     font-size: 60px;
 }
+.table .progress {
+margin-bottom: 0px;
+}
