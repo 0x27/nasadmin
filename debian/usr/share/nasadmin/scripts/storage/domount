@@ -1,0 +1,27 @@
+#!/bin/bash
+
+UUID=$1
+
+if [ ! -z "$UUID" ]
+then
+
+  UUID_LINK="/dev/disk/by-uuid/$UUID"
+
+  if [ -L $UUID_LINK ]
+  then
+
+    FS_TYPE=`/sbin/blkid|grep $UUID|awk '{print $3}'|awk -F'"' '{print $2}'`
+    DEST=/media/$UUID
+    sudo /bin/mkdir -p $DEST
+    RESULT=$(echo "UUID=$UUID $DEST $FS_TYPE defaults 0 0" | sudo /usr/bin/tee -a /etc/fstab)
+    sudo /bin/mount -a 
+
+    echo "true"
+
+  else
+    echo "false"
+  fi
+else
+  echo "false"
+fi
+

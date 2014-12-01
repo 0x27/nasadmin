@@ -10,16 +10,16 @@ function byte_power($bytes, $decimals = 2) {
   $factor = floor((strlen($bytes) - 1) / 3);
   return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor] . "B";
 }
-function action_button() {
+function action_button($uuid) {
   $content='                 <div class="btn-group">'.chr(10);
   $content.='                  <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">'.chr(10);
   $content.='                   Actions'.chr(10);
   $content.='                   <span class="caret"></span>'.chr(10);
   $content.='                  </button>'.chr(10);
   $content.='                  <ul class="dropdown-menu pull-right" role="menu">'.chr(10);
-  $content.='                   <li><a href="#"><i class="fa fa-arrow-circle-right fa-fw"></i> Mount</a>'.chr(10);
+  $content.='                   <li><a href="#" onclick="doMount(\''.$uuid.'\')"><i class="fa fa-arrow-circle-right fa-fw"></i> Mount</a>'.chr(10);
   $content.='                   </li>'.chr(10);
-  $content.='                   <li><a href="#"><i class="fa fa-eject fa-fw"></i> Unmount</a>'.chr(10);
+  $content.='                   <li><a href="#" onclick="doUmount(\''.$uuid.'\')"><i class="fa fa-eject fa-fw"></i> Unmount</a>'.chr(10);
   $content.='                   </li>'.chr(10);
   $content.='                   <li class="divider"></li>'.chr(10);
   $content.='                   <li><a href="#"><i class="fa fa-arrows-alt fa-fw"></i> Resize</a>'.chr(10);
@@ -62,7 +62,7 @@ foreach ($filesystems as $fsline) {
 
   if (strpos($_dev,$os_disk)===false) {
     echo '                <div class="pull-right">'.chr(10);
-    echo action_button();
+    echo action_button($_uuid);
     echo '                </div>'.chr(10);
   } else {
     echo '                <div class="pull-right">'.chr(10);
@@ -113,7 +113,7 @@ foreach ($filesystems as $fsline) {
   $table_content.='                  </td>'.chr(10);
   $table_content.='                  <td>'.chr(10);
   if (strpos($_dev,$os_disk)!==0) {
-    $table_content.=action_button();
+    $table_content.=action_button($_uuid);
   }
   $table_content.='                  </td>'.chr(10);
   $table_content.='                 </tr>'.chr(10);
@@ -167,6 +167,25 @@ function doRescan() {
     location.reload();
   });
 }
+
+function doMount(uuid) {
+  $.ajax({ url: "do_action.php?action=mount&uuid="+uuid }).done(function(result) {
+    if (result.trim()=='true')
+      location.reload();
+    else 
+      alert('failed');
+  });
+}
+
+function doUmount(uuid) {
+  $.ajax({ url: "do_action.php?action=umount&uuid="+uuid }).done(function(result) {
+    if (result.trim()=='true')
+      location.reload();
+    else 
+      alert('failed');
+  });
+}
+
 </script>
 
 <?php

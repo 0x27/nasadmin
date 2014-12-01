@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Refreshing..."
+CONTENT=$(/sbin/blkid)
+echo "Refresh complete. New parition structure:"
+echo " "
+echo $CONTENT
