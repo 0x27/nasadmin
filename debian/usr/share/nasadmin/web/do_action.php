@@ -11,13 +11,13 @@ if (isset($_GET['action'])) {
 
     case "mount":
       if (isset($_GET['uuid'])) {
-        echo shell_exec($script_dir."storage/domount ".$_GET['uuid']); 
+        echo shell_exec($script_dir."storage/domount ".escapeshellarg($_GET['uuid'])); 
       }
       break;
 
     case "umount":
       if (isset($_GET['uuid'])) {
-        echo shell_exec($script_dir."storage/doumount ".$_GET['uuid']); 
+        echo shell_exec($script_dir."storage/doumount ".escapeshellarg($_GET['uuid'])); 
       }
       break;
 
